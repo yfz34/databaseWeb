@@ -1,0 +1,63 @@
+/* .App {
+  text-align: center;
+} */
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#id_wrapper {
+  /* 設定高度最小為100%, 如果內容區塊很多, 可以長大 */
+  min-height: 100%;
+  /* 位置設為relative, 作為footer區塊位置的參考 */
+  position: relative;
+}
+
+#id_header {
+  /* 設定header的高度 */
+  height: 40px;
+  box-sizing: border-box;
+}
+
+#id_content {
+  /* 留出header及footer區塊的空間 */
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+#id_footer {
+  /* 設定footer的高度 */
+  height: 40px;
+  box-sizing: border-box;
+  /* 設定footer絕對位置在底部 */
+  position: absolute;
+  bottom: 0;
+  /* 展開footer寬度 */
+  width: 100%;
+}
