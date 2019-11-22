@@ -1,5 +1,6 @@
 import React from 'react'
 import DataTable from './table/datatable1'
+// import DataTable from './table/dt'
 import Filter from './filter/filter'
 
 function DataTablePanel(){

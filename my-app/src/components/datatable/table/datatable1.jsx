@@ -25,7 +25,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { withStyles } from '@material-ui/core/styles';
 
-import { getDataTable, deleteDataRows } from '../../../actions/axios'
+import { getDataTable, deleteDataRows, insertDataRows, updataDataRows, changeAddedRows } from '../../../actions/axios'
 
 import {
   generateRows,
@@ -155,11 +155,11 @@ const Cell = (props) => {
 };
 
 const EditCell = (props) => {
-  const { column } = props;
-  const availableColumnValues = availableValues[column.name];
-  if (availableColumnValues) {
-    return <LookupEditCell {...props} availableColumnValues={availableColumnValues} />;
-  }
+  // const { column } = props;
+  // const availableColumnValues = availableValues[column.name];
+  // if (availableColumnValues) {
+  //   return <LookupEditCell {...props} availableColumnValues={availableColumnValues} />;
+  // }
   return <TableEditRow.Cell {...props} />;
 };
 
@@ -207,7 +207,7 @@ function DataTable(props){
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(0);
   const [pageSizes] = useState([5, 10, 0]);
-  const [columnOrder, setColumnOrder] = useState(['product', 'region', 'amount', 'discount', 'saleDate', 'customer']);
+  // const [columnOrder, setColumnOrder] = useState(['product', 'region', 'amount', 'discount', 'saleDate', 'customer']);
   const [currencyColumns] = useState(['amount']);
   const [percentColumns] = useState(['discount']);
   const [leftFixedColumns] = useState([TableEditColumn.COLUMN_TYPE]);
@@ -218,33 +218,36 @@ function DataTable(props){
     { columnName: 'amount', type: 'sum' },
   ]);
 
-  const changeAddedRows = value => setAddedRows(
-    value.map(row => (Object.keys(row).length ? row : {
-      amount: 0,
-      discount: 0,
-      saleDate: new Date().toISOString().split('T')[0],
-      product: availableValues.product[0],
-      region: availableValues.region[0],
-      customer: availableValues.customer[0],
-    })),
-  );
+  // const changeAddedRows = value => setAddedRows(
+  //   value.map(row => (Object.keys(row).length ? row : {
+  //     account: 0,
+  //     name: 0,
+  //     sex: 0,
+  //     phone: 0,
+  //     eMail: 0,
+  //     birthday: new Date().toISOString().split('T')[0],
+  //     cName: 0,
+  //     cPhone: 0,
+  //     cAddr: 0
+  //   })),
+  // );
 
-  const deleteRows = (deletedIds) => {
-    const rowsForDelete = props.rows.slice();
+  // const deleteRows = (deletedIds) => {
+  //   const rowsForDelete = props.rows.slice();
 
-    console.log('傳入參數:',deletedIds)
-    console.log('參數:',rowsForDelete)
+  //   console.log('傳入參數:',deletedIds)
+  //   console.log('參數:',rowsForDelete)
     
-    deletedIds.forEach((rowId) => {
-      const index = rowsForDelete.findIndex(row => row.id === rowId);
-      if (index > -1) {
-        rowsForDelete.splice(index, 1);
-      }
-    });
+  //   deletedIds.forEach((rowId) => {
+  //     const index = rowsForDelete.findIndex(row => row.id === rowId);
+  //     if (index > -1) {
+  //       rowsForDelete.splice(index, 1);
+  //     }
+  //   });
 
-    console.log('參數處理:',rowsForDelete)
-    return rowsForDelete;
-  };
+  //   console.log('參數處理:',rowsForDelete)
+  //   return rowsForDelete;
+  // };
 
   //集合包
   const commitChanges = ({ added, changed, deleted }) => {
@@ -258,15 +261,19 @@ function DataTable(props){
           ...row,
         })),
       ];
+
+      changedRows = props.insertDataRows(added)
     }
     if (changed) {
-      changedRows = props.rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
+      // changedRows = props.rows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
+      changedRows = props.updataDataRows(changed)
     }
     if (deleted) {
       // changedRows = deleteRows(deleted);
       changedRows = props.deleteDataRows(deleted);
+      console.log('changedRows: ' + changedRows)
     }
-    setRows(changedRows);
+    // setRows(changedRows);
   };
 
   return (
@@ -291,8 +298,10 @@ function DataTable(props){
           onEditingRowIdsChange={getEditingRowIds}
           rowChanges={rowChanges}
           onRowChangesChange={setRowChanges}
-          addedRows={addedRows}
-          onAddedRowsChange={changeAddedRows}
+          // addedRows={addedRows}
+          // onAddedRowsChange={changeAddedRows}
+          addedRows={props.addedRows}
+          onAddedRowsChange={props.changeAddedRows}
           onCommitChanges={commitChanges}
         />
         <SummaryState
@@ -314,8 +323,8 @@ function DataTable(props){
           cellComponent={Cell}
         />
         <TableColumnReordering
-          order={columnOrder}
-          onOrderChange={setColumnOrder}
+          order={props.columnOrder}
+          // onOrderChange={setColumnOrder}
         />
         <TableHeaderRow showSortingControls />
         <TableEditRow
@@ -323,7 +332,7 @@ function DataTable(props){
         />
         <TableEditColumn
           width={170}
-          showAddCommand={!addedRows.length}
+          showAddCommand={!props.addedRows.length}
           showEditCommand
           showDeleteCommand
           commandComponent={Command}
@@ -345,6 +354,8 @@ const mapStateToProps = (state) => {
     columns: state.dataTableReducer1.columns,
     tableColumnExtensions: state.dataTableReducer1.tableColumnExtensions,
     rows: state.dataTableReducer1.rows,
+    columnOrder: state.dataTableReducer1.columnOrder,
+    addedRows: state.dataTableReducer1.addedRows,
   }
 }
 
@@ -352,6 +363,10 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     getDataTable,
     deleteDataRows,
+    updataDataRows,
+    insertDataRows,
+    changeAddedRows
+    // setColumnOrder
   }, dispatch);
 }
 

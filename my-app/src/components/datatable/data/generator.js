@@ -85,9 +85,9 @@ const generateDate = ({
 const generatePhone = () => Math.random().toString().slice(2, 12).replace(/(\d{3})(\d{3})(\d{4})$/, '($1) $2-$3');
 
 export const defaultColumnValues = {
-  sex: ['Male', 'Female'],
+  gender: ['Male', 'Female'],
   name: [
-    'sex',
+    'gender',
     {
       Male: maleFirstNames,
       Female: femaleFirstNames,
@@ -110,8 +110,8 @@ export const defaultNestedColumnValues = {
 };
 
 export const globalSalesValues = {
-  Account: ['Asia', 'Europe', 'North America', 'South America', 'Australia', 'Africa'],
-  Name: ['Energy', 'Health', 'Manufacturing', 'Insurance', 'Banking', 'Telecom'],
+  region: ['Asia', 'Europe', 'North America', 'South America', 'Australia', 'Africa'],
+  sector: ['Energy', 'Health', 'Manufacturing', 'Insurance', 'Banking', 'Telecom'],
   channel: ['Resellers', 'Retail', 'VARs', 'Consultants', 'Direct', 'Telecom'],
   units: ({ random }) => Math.floor(random() * 4) + 1,
   customer: [
@@ -130,16 +130,16 @@ export const globalSalesValues = {
 };
 
 export const employeeValues = {
-  sex: ['Male', 'Female'],
+  gender: ['Male', 'Female'],
   prefix: [
-    'sex',
+    'gender',
     {
       Male: ['Mr.', 'Dr.'],
       Female: ['Mrs.', 'Ms.', 'Dr.'],
     },
   ],
   firstName: [
-    'sex',
+    'gender',
     {
       Male: maleFirstNames,
       Female: femaleFirstNames,
@@ -207,9 +207,13 @@ export function generateRows({
   length,
   random = randomSeed(329972281),
 }) {
+  // console.log(columnValues)
+  // console.log(length)
+  // console.log(random)
+
   const data = [];
   const columns = Object.keys(columnValues);
-
+// console.log('columns:' + columns)
   for (let i = 0; i < length; i += 1) {
     const record = {};
 
@@ -231,10 +235,11 @@ export function generateRows({
       } else {
         record[column] = value;
       }
+      // console.log("record "+record[column])
     });
-
+    
     data.push(record);
   }
-
+  
   return data;
 }
